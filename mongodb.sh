@@ -13,7 +13,7 @@ Y="\e[33m"
 
 if [ $USERID -ne 0 ]
 then 
-    echo -e "ERROR:: Please run this script with root user"
+    echo "ERROR:: Please run this script with root user"
     exit 1
 else
     echo "INFO: You are root user"
