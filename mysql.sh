@@ -39,7 +39,7 @@ cp /home/centos/roboshop-shell-2024/mysql.repo /etc/yum.repos.d/mysql.repo &>>$L
 
 VALIDATE $? "Copying MySQL repo into yum.repos.d" 
 
-yum install mysql-community-server &>>$LOG_FILE
+yum install mysql-community-server -y &>>$LOG_FILE
 
 VALIDATE $? "Installing MySQL"
 
@@ -51,6 +51,6 @@ systemctl start mysqld &>>$LOG_FILE
 
 VALIDATE $? "Starting Mysqld service"
 
-mysql-secure-installation --set-root-pass RoboShop@1 &>>$LOG_FILE
+mysql_secure_installation --set-root-pass RoboShop@1 &>>$LOG_FILE
 
 VALIDATE $? "Setting up root password"
