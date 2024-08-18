@@ -30,7 +30,7 @@ curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$LOG_FILE
 
 VALIDATE $? "Setting Up NPM Source" &>>$LOG_FILE
 
-yum install nodejs -y &>>$/LOG_FILE
+yum install nodejs -y &>>$LOG_FILE
 
 VALIDATE $? "Installing NodeJS"
 
@@ -94,6 +94,6 @@ mongo --host mongodb.sivadevops.website < /app/schema/user.js &>>$LOG_FILE
 
 VALIDATE $? "Loading schema into mongodb"
 
-systemctl restart user.service
+systemctl restart user.service &>>$LOG_FILE
 
 VALIDATE $? "Restarting user service"
