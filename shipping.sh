@@ -1,99 +1,85 @@
 #!/bin/bash
 
-USERID=$(id -u)
+DATE=$(date +%F)
 LOGSDIR=/tmp
+# /home/centos/shellscript-logs/script-name-date.log
 SCRIPT_NAME=$0
-DATE=$(date)
-LOG_FILE=$LOGSDIR/$SCRIPT_NAME-$DATE.log
-username=roboshop
-directory=/app
-
+LOGFILE=$LOGSDIR/$0-$DATE.log
+USERID=$(id -u)
 R="\e[31m"
 G="\e[32m"
 N="\e[0m"
 Y="\e[33m"
 
-if [ $USERID -ne 0 ]
-then 
-    echo -e "$R ERROR:: Please run this script with root user $N"
+if [ $USERID -ne 0 ];
+then
+    echo -e "$R ERROR:: Please run this script with root access $N"
     exit 1
-else
-    echo "INFO: You are root user"
 fi
 
 VALIDATE(){
-    if [ $1 -ne 0 ]
-    then 
-        echo -e "$2...$R FAILURE $N"
+    if [ $1 -ne 0 ];
+    then
+        echo -e "$2 ... $R FAILURE $N"
         exit 1
     else
-        echo -e "$2...$G SUCCESS $N"
+        echo -e "$2 ... $G SUCCESS $N"
     fi
 }
 
-yum install maven -y &>>$LOG_FILE
+yum install maven -y &>>$LOGFILE
 
-VALIDATE $? "Installing maven package"
+VALIDATE $? "Installing Maven"
 
-if id "$username" &>/dev/null
-then 
-    echo "$username already exists."
-else
-    echo "$username doesn't exists,Let's create"
-    useradd $username
-fi
+useradd roboshop &>>$LOGFILE
 
-if [ -d $directory ]
-then
-    echo "$directory already exists."
-else
-    echo "$directory doesn't exists,Let's create"
-    mkdir $directory
+mkdir /app &>>$LOGFILE
 
-curl -L -o /tmp/shipping.zip https://roboshop-builds.s3.amazonaws.com/shipping.zip &>>$LOG_FILE
+curl -L -o /tmp/shipping.zip https://roboshop-builds.s3.amazonaws.com/shipping.zip &>>$LOGFILE
 
 VALIDATE $? "Downloading shipping artifact"
 
-cd /app &>>$LOG_FILE
+cd /app &>>$LOGFILE
 
-VALIDATE $? "Moving into app directory"
-
-unzip /tmp/shipping.zip &>>$LOG_FILE
+VALIDATE $? "Moving to app directory"
+ 
+unzip /tmp/shipping.zip &>>$LOGFILE
 
 VALIDATE $? "Unzipping shipping"
 
-mvn clean package &>>$LOG_FILE
+mvn clean package &>>$LOGFILE
 
-VALIDATE $? "Build and package"
+VALIDATE $? "packaging shipping app"
 
-mv target/shipping-1.0.jar shipping.jar &>>$LOG_FILE
+mv target/shipping-1.0.jar shipping.jar &>>$LOGFILE
 
-VALIDATE $? "Renaming shipping.jar file"
+VALIDATE $? "renaming shipping jar"
 
-cp /home/centos/roboshop-shell-2024/shipping.service /etc/systemd/system/shipping.service &>>$LOG_FILE
+cp /home/centos/roboshop-shell/shipping.service /etc/systemd/system/shipping.service &>>$LOGFILE
 
 VALIDATE $? "copying shipping service"
 
-systemctl daemon-reload &>>$LOG_FILE
+systemctl daemon-reload &>>$LOGFILE
 
-VALIDATE $? "daemon reload"
+VALIDATE $? "daemon-reload"
 
-systemctl enable shipping.service &>>$LOG_FILE
+systemctl enable shipping  &>>$LOGFILE
 
-VALIDATE $? "Enabling shipping service"
+VALIDATE $? "Enabling shipping"
 
-systemctl start shipping.service &>>$LOG_FILE
+systemctl start shipping &>>$LOGFILE
 
-VALIDATE $? "Starting shipping service"
+VALIDATE $? "Starting shipping"
 
-yum install mysql -y &>>$LOG_FILE
 
-VALIDATE $? "Installing mysql"
+yum install mysql -y  &>>$LOGFILE
 
-mysql -h mysql.sivadevops.website -uroot -pRoboShop@1 < /app/schema/shipping.sql &>>$LOG_FILE
+VALIDATE $? "Installing MySQL client"
 
-VALIDATE $? "Loading schema into mysql"
+mysql -h mysql.sivadevops.website -uroot -pRoboShop@1 < /app/schema/shipping.sql  &>>$LOGFILE
 
-systemctl restart shipping.service &>>$LOG_FILE
+VALIDATE $? "Loaded countries and cities info"
 
-VALIDATE $? "Restart shipping"
+systemctl restart shipping &>>$LOGFILE
+
+VALIDATE $? "Restarting shipping"
