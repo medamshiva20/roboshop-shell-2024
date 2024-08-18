@@ -78,11 +78,11 @@ systemctl daemon-reload &>>$LOG_FILE
 
 VALIDATE $? "daemon reload"
 
-systemctl enable shipping &>>$LOG_FILE
+systemctl enable shipping.service &>>$LOG_FILE
 
 VALIDATE $? "Enabling shipping service"
 
-systemctl start shipping &>>$LOG_FILE
+systemctl start shipping.service &>>$LOG_FILE
 
 VALIDATE $? "Starting shipping service"
 
@@ -94,6 +94,6 @@ mysql -h mysql.sivadevops.website -uroot -pRoboShop@1 < /app/schema/shipping.sql
 
 VALIDATE $? "Loading schema into mysql"
 
-systemctl restart shipping &>>$LOG_FILE
+systemctl restart shipping.service &>>$LOG_FILE
 
-VALIDATE $? "Restarting shipping service"
+VALIDATE $? "Restart shipping"
