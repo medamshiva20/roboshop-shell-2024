@@ -37,7 +37,7 @@ VALIDATE $? "Disabling MySQL"
 
 cp /home/centos/roboshop-shell-2024/mysql.repo /etc/yum.repos.d/mysql.repo &>>$LOG_FILE
 
-VALIDATE $? "Disabling MySQL" 
+VALIDATE $? "Copying MySQL repo into yum.repos.d" 
 
 yum install mysql-community-server &>>$LOG_FILE
 
