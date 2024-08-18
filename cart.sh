@@ -78,7 +78,7 @@ systemctl daemon-reload
 
 VALIDATE $? "daemon reloading"
 
-system enable cart.service
+systemctl enable cart.service
 
 VALIDATE $? "Enabling cart service"
 
