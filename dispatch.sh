@@ -78,7 +78,7 @@ cp /home/centos/roboshop-shell-2024/dispatch.service /etc/systemd/system/dispatc
 
 VALIDATE $? "Copying dispatch service"
 
-systemctl deamon-reload
+systemctl daemon-reload
 
 VALIDATE $? "daemon reload"
 
