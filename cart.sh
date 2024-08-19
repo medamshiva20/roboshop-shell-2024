@@ -51,7 +51,7 @@ cd /app &>>$LOGFILE
 
 VALIDATE $? "Moving into app directory"
 
-unzip /tmp/cart.zip &>>$LOGFILE
+unzip -o /tmp/cart.zip &>>$LOGFILE
 
 VALIDATE $? "unzipping cart"
 
