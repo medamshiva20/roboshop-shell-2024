@@ -1,88 +1,77 @@
 #!/bin/bash
 
-USERID=$(id -u)
+DATE=$(date +%F)
 LOGSDIR=/tmp
+# /home/centos/shellscript-logs/script-name-date.log
 SCRIPT_NAME=$0
-DATE=$(date)
-LOG_FILE=$LOGSDIR/$SCRIPT_NAME-$DATE.log
-username=roboshop
-directory=/app
-
+LOGFILE=$LOGSDIR/$0-$DATE.log
+USERID=$(id -u)
 R="\e[31m"
 G="\e[32m"
 N="\e[0m"
 Y="\e[33m"
 
-if [ $USERID -ne 0 ]
-then 
-    echo -e "$R ERROR:: Please run this script with root user $N"
+if [ $USERID -ne 0 ];
+then
+    echo -e "$R ERROR:: Please run this script with root access $N"
     exit 1
-else
-    echo "INFO: You are root user"
 fi
 
 VALIDATE(){
-    if [ $1 -ne 0 ]
-    then 
-        echo -e "$2...$R FAILURE $N"
+    if [ $1 -ne 0 ];
+    then
+        echo -e "$2 ... $R FAILURE $N"
         exit 1
     else
-        echo -e "$2...$G SUCCESS $N"
+        echo -e "$2 ... $G SUCCESS $N"
     fi
 }
 
-curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$LOG_FILE
+curl -sL https://rpm.nodesource.com/setup_lts.x | bash &>>$LOGFILE
 
-VALIDATE $? "Setting Up NPM Source" &>>$LOG_FILE
+VALIDATE $? "Setting up NPM Source"
 
-yum install nodejs -y &>>$LOG_FILE
+yum install nodejs -y &>>$LOGFILE
 
 VALIDATE $? "Installing NodeJS"
 
-if id "$username" &>/dev/null
-then
-    echo "$username already exists."
-else
-    echo "$username doesn't exists,Let's create the user"
-    useradd $username
-fi
+#once the user is created, if you run this script 2nd time
+# this command will defnitely fail
+# IMPROVEMENT: first check the user already exist or not, if not exist then create
+useradd roboshop &>>$LOGFILE
 
-if [ -d $directory ]
-then 
-    echo "$directory already exists"
-else
-    echo "$directory doesn't exists,Let's create"
-    mkdir $directory
-fi
+#write a condition to check directory already exist or not
+mkdir /app &>>$LOGFILE
 
-curl -L -o /tmp/cart.zip https://roboshop-builds.s3.amazonaws.com/cart.zip &>>$LOG_FILE
+curl -o /tmp/cart.zip https://roboshop-builds.s3.amazonaws.com/cart.zip &>>$LOGFILE
 
-VALIDATE $? "Download the cart arifact"
+VALIDATE $? "downloading cart artifact"
 
-cd /app &>>$LOG_FILE
+cd /app &>>$LOGFILE
 
 VALIDATE $? "Moving into app directory"
 
-unzip /tmp/cart.zip &>>$LOG_FILE
+unzip /tmp/cart.zip &>>$LOGFILE
 
-VALIDATE $? "Unzipping cart artifact"
+VALIDATE $? "unzipping cart"
 
-npm install &>>$LOG_FILE
+npm install &>>$LOGFILE
 
-VALIDATE $? "Install Dependencies"
+VALIDATE $? "Installing dependencies"
 
-cp /home/centos/roboshop-shell-2024/cart.service /etc/systemd/system/cart.service &>>$LOG_FILE
+# give full path of cart.service because we are inside /app
+cp /home/centos/roboshop-shell-2024/cart.service /etc/systemd/system/cart.service &>>$LOGFILE
 
-VALIDATE $? "Copying cart service"
+VALIDATE $? "copying cart.service"
 
-systemctl daemon-reload &>>$LOG_FILE
+systemctl daemon-reload &>>$LOGFILE
 
-VALIDATE $? "Reload daemon"
+VALIDATE $? "daemon reload"
 
-systemctl enable cart.service &>>$LOG_FILE
+systemctl enable cart &>>$LOGFILE
 
-VALIDATE $? "Enabling cart service"
+VALIDATE $? "Enabling cart"
 
-systemctl start cart.service &>>$LOG_FILE
+systemctl start cart &>>$LOGFILE
 
-VALIDATE $? "Starting cart service"
+VALIDATE $? "Starting cart"
