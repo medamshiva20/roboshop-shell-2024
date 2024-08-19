@@ -46,22 +46,39 @@ else
     mkdir $directory
 fi
 
-yum install python36 gcc python3-devel -y &>>$LOG_FILE
+yum install python36 gcc python3-devel -y &>>$LOGFILE
 
 VALIDATE $? "Installing python"
 
-curl -L -o /tmp/payment.zip https://roboshop-builds.s3.amazonaws.com/payment.zip &>>$LOG_FILE
+curl -L -o /tmp/payment.zip https://roboshop-builds.s3.amazonaws.com/payment.zip &>>$LOGFILE
 
 VALIDATE $? "Downloading payment source code"
 
-cd /app &>>$LOG_FILE
+cd /app &>>$LOGFILE
 
 VALIDATE $? "Moveing into app directory"
 
-unzip -o /tmp/payment.zip
+unzip -o /tmp/payment.zip &>>$LOGFILE
 
 VALIDATE $? "Unzipping payment"
 
-pip3.6 install -r requirements.txt
+pip3.6 install -r requirements.txt &>>$LOGFILE
 
+VALIDATE $? "Installing dependencies"
+
+cp /home/centos/roboshop-shell-2024/payment.service /etc/systemd/system/payment.service &>>$LOGFILE
+
+VALIDATE $? "Copying payment service"
+
+systemctl daemon-reload &>>$LOGFILE
+
+VALIDATE $? "daemon reload"
+
+systemctl enable payment &>>$LOGFILE
+
+VALIDATE $? "Enabling payment"
+
+systemctl start payment &>>$LOGFILE
+
+VALIDATE $? "Starting payment"
 
