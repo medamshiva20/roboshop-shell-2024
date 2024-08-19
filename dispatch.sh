@@ -34,7 +34,7 @@ yum install golang -y &>>$LOGFILE
 
 VALIDATE $? "Installing golang"
 
-id "$username" &>/dev/null
+if id "$username" &>/dev/null
 then
     echo "$username already exists"
 else
