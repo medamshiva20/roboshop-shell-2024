@@ -1,3 +1,5 @@
+#!/bin/bash
+
 NAMES=("MongoDB" "Catalogue" "Redis" "User" "Cart" "MySQL" "Shipping" "RabbitMQ" "Payment" "Dispatch" "Web")
 INSTANCE_TYPE=""
 IMAGE_ID=ami-0b4f379183e5706b9
