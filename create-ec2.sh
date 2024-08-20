@@ -10,8 +10,8 @@ DOMAIN_NAME=sivadevops.website
 # if mysql or mongodb instance_type should be t3.medium , for all others it is t2.micro
 for i in "${NAMES[@]}"
 do  
-    INSTANCE_NAME=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mongodb,redis,mysql,rabbitmq,catalogue,user,cart,shipping,payment,web)
-    echo "Instance $INSTANCE_NAME" already exists
+    #INSTANCE_NAME=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=mongodb,redis,mysql,rabbitmq,catalogue,user,cart,shipping,payment,web)
+    #echo "Instance $INSTANCE_NAME" already exists
     if [[ $i == "mongodb" || $i == "mysql" ]]
     then
         INSTANCE_TYPE="t3.medium"
