@@ -2,7 +2,7 @@
 
 NAMES=("mongodb" "redis" "mysql" "rabbitmq" "catalogue" "user" "cart" "shipping" "payment" "dispatch" "web")
 INSTANCE_TYPE=""
-IMAGE_ID=ami-03265a0778a880afb
+IMAGE_ID=ami-0b4f379183e5706b9
 SECURITY_GROUP_ID=sg-0189d4870cc65fd55
 
 
