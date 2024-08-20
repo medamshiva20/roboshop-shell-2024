@@ -1,5 +1,5 @@
 NAMES=("MongoDB" "Catalogue" "Redis" "User" "Cart" "MySQL" "Shipping" "RabbitMQ" "Payment" "Dispatch" "Web")
-INSTANCE_TYPE= ""
+INSTANCE_TYPE=""
 IMAGE_ID=ami-0b4f379183e5706b9
 SECURITY_GROUP_ID=sg-0df20b2370a23626b
 
