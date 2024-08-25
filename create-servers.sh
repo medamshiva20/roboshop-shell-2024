@@ -18,8 +18,9 @@ do
   echo $i creating 
   IPADDRESS=$(aws ec2 run-instances --image-id $IMAGE_ID --instance-type $INSTANCE_TYPE  --security-group-ids $ECURITY_GROUP_ID --tag-specifications "ResourceType=instance,Tags=[{Key=Name,Value=$i}]"|jq -r '.Instances[0].PrivateIpAddress')
   echo $i created: $IPADDRESS
-   aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch '
-    {
+   aws route53 change-resource-record-sets --hosted-zone-id $HOSTED_ZONE_ID --change-batch 
+   '
+   {
             "Changes": [{
             "Action": "CREATE",
                         "ResourceRecordSet": {
